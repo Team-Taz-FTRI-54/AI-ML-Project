@@ -13,3 +13,9 @@ https://www.npmjs.com/package/pdf-parse
 
 - Is it a summary of each chapter?
 - What's the best way of embedding an entire PDF text content? The PDF could be from 5 pages to 300 pages.
+
+## Eric S Responsibilities
+
+1/ Frontend set-up on components
+2/ UI/UX for application
+3/ Assist in mongodb set-up

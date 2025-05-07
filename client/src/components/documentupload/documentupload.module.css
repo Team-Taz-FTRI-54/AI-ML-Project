@@ -1,0 +1,13 @@
+.inputBox {
+  border: '2px dashed #aaa';
+  padding: '40px';
+  text-align: 'center';
+  margin-bottom: '10px';
+  border-radius: '8px';
+  background-color: '#f9f9f9';
+  cursor: 'pointer';
+}
+
+.inputFile {
+  margin-top: 10px;
+}
