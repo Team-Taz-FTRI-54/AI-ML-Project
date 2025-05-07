@@ -2,9 +2,10 @@
   "name": "server",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon server.js"
+    "server": "NODE_OPTIONS='--loader ts-node/esm' nodemon server.ts"
   },
   "keywords": [],
   "author": "",
@@ -17,8 +18,9 @@
     "express": "^5.1.0",
     "mongodb": "^6.16.0",
     "mongoose": "^8.14.1",
-    "nodejs": "^0.0.0",
     "nodemon": "^3.1.10",
-    "pdf-parse": "^1.1.1"
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   }
 }
