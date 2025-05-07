@@ -5,19 +5,19 @@ import mongoose from 'mongoose';
 
 //Set up database
 
-const MONGO_URI = process.env.MONGO_URI;
+//const MONGO_URI = process.env.MONGO_URI;
 
-if (!MONGO_URI) {
-  throw new Error('MONGO_URI is not defined');
-}
+// if (!MONGO_URI) {
+//   throw new Error('MONGO_URI is not defined');
+// }
 
 mongoose
-  .connect(MONGO_URI, {
+  .connect(`${process.env.MONGO_URI}`, {
     // options for the connect method to parse the URI
     // useNewUrlParser: true,
     // useUnifiedTopology: true,
     // sets the name of the DB that our collections are part of
-    dbName: '', //!pending for db name
+    dbName: 'test', //!pending for db name
   })
   .then(() => console.log('👌👌 MongoDB connected'))
   .catch((err) => console.log('👎🏻👎🏻 MongoDB connection error:', err.message));
