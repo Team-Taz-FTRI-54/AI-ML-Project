@@ -1,5 +1,5 @@
 .answerBox {
-  border: 1px solid blue;
+  border: 1px solid 544d45;
   border-radius: 14px;
 }
 
@@ -8,7 +8,7 @@
 }
 
 .response {
-  color: darkslategray;
+  color: 3544d45;
   font-size: 1rem;
 }
 
@@ -22,7 +22,7 @@
   resize: vertical;
   padding: 10px;
   font-size: 16px;
-  border: 2px solid #544d45;
+  border: 2px solid #e67f0a;
   border-radius: 8px;
   outline: none;
 }
