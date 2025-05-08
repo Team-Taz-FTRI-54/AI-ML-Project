@@ -18,6 +18,12 @@ app.post('/', searchRoute, (_req, res) => {
   });
 });
 
+app.post('/', uploadRoute, (_req, res) => {
+  res.status(200).json({
+    answer: res.locals.answer,
+  });
+});
+
 const errorHandler: ErrorRequestHandler = (
   err: ServerError,
   _req,
