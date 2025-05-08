@@ -4,6 +4,9 @@ import mongoose, { Schema, Document } from 'mongoose';
 type logType = {
   promptText: string;
   promptType: string;
+  embedding: string;
+  pineconeQueryResult: string;
+  answer: string;
 };
 
 // Extend Document to get Mongoose Document methods and metadata
@@ -13,6 +16,9 @@ type LogDocument = logType & Document;
 const logSchema = new Schema<LogDocument>({
   promptText: { type: String, required: true },
   promptType: { type: String, required: true },
+  embedding: { type: String, required: true },
+  pineconeQueryResult: { type: String, required: true },
+  answer: { type: String, required: true },
 });
 
 // Create model

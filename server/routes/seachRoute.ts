@@ -6,7 +6,7 @@ import {
 } from '../controllers/openaiController.js';
 import { parseUserQuery } from '../controllers/userQueryController.js';
 import { queryPineconeDatabase } from '../controllers/pineconeController.js';
-import { getProfile } from '../controllers/loggingController.js';
+import { getProfile, logQuery } from '../controllers/loggingController.js';
 
 router.post(
   '/api/query',
@@ -14,6 +14,7 @@ router.post(
   queryOpenAIEmbedding,
   queryPineconeDatabase,
   queryOpenAIChat,
+  logQuery,
 
   (_req, res) => {
     res.status(200).json({ answer: res.locals.answer });
