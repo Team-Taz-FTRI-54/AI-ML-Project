@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "NODE_OPTIONS='--loader ts-node/esm' nodemon server.ts"
+    "server": "NODE_OPTIONS='--loader ts-node/esm' nodemon server.ts",
+    "embeddings": "NODE_OPTIONS='--loader ts-node/esm' node controllers/embeddingsController.ts"
   },
   "keywords": [],
   "author": "",
@@ -16,15 +17,19 @@
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "mongodb": "^6.16.0",
     "mongoose": "^8.14.1",
-    "openai": "^4.97.0",
-    "pdf-parse": "^1.1.1"
-  },
-  "devDependencies": {
-    "@types/node": "^22.15.15",
     "nodemon": "^3.1.10",
+    "openai": "^4.97.0",
+    "pdf.js-extract": "^0.2.1",
+    "semantic-chunking": "^2.4.3",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@swc/core": "^1.11.24",
+    "@types/express": "^5.0.1",
+    "@types/pdf-parse": "^1.1.5"
   }
 }

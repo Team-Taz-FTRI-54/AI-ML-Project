@@ -1,13 +1,11 @@
 import express, { ErrorRequestHandler } from 'express';
 import cors from 'cors';
 import 'dotenv/config';
-
 import { ServerError } from '../types/types.js';
-
 import { Request, Response, NextFunction } from 'express';
 
-import uploadRoute from './routes/uploadRoute.ts';
-import searchRoute from './routes/seachRoute.ts';
+import uploadRoute from './routes/uploadRoute.js';
+import searchRoute from './routes/seachRoute.js';
 
 const app = express();
 

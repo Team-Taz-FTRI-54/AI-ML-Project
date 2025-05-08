@@ -1,5 +1,5 @@
 import { Request, RequestHandler } from 'express';
-import { ServerError } from '../../types/types';
+import { ServerError } from '../../types/types.js';
 
 export const parseUserQuery: RequestHandler = async (
   req: Request<unknown, unknown, Record<string, unknown>>,

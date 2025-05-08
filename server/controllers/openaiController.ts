@@ -1,9 +1,9 @@
 import { RequestHandler } from 'express';
-import { ServerError } from '../../types/types';
+import { ServerError } from '../../types/types.js';
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
-import { SYSTEM_PROMPTS } from '../prompts';
-import { buildUserPrompt } from '../prompts';
+import { SYSTEM_PROMPTS } from '../prompts.js';
+import { buildUserPrompt } from '../prompts.js';
 
 dotenv.config();
 //console.log('OPENAIAPIKEY', `${process.env.OPENAI_API_KEY}`);
@@ -65,8 +65,8 @@ export const queryOpenAIChat: RequestHandler = async (_req, res, next) => {
     .filter((metadata) => metadata !== undefined);
 
   //!define user / system prompts
-const systemPromptContent = SYSTEM_PROMPTS[style];
-const userPromptContent = buildUserPrompt(style, data, userQuery);
+  const systemPromptContent = SYSTEM_PROMPTS[style];
+  const userPromptContent = buildUserPrompt(style, data, userQuery);
 
   const userInput: OpenAI.Chat.Completions.ChatCompletionMessageParam = {
     role: 'user',

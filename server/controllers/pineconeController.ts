@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { ServerError } from '../../types/types';
+import { ServerError } from '../../types/types.js';
 import { Pinecone } from '@pinecone-database/pinecone';
 import { constrainedMemory } from 'process';
 import { ScoredPineconeRecord } from '@pinecone-database/pinecone';

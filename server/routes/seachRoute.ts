@@ -13,6 +13,7 @@ router.post(
   queryOpenAIEmbedding,
   queryPineconeDatabase,
   queryOpenAIChat,
+
   (_req, res) => {
     res.status(200).json({ amswer: res.locals.answer });
   }
