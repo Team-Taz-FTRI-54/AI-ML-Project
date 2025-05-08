@@ -17,6 +17,8 @@
   width: 100%;
   max-width: 500px;
   text-align: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .inputFile {
@@ -51,7 +53,8 @@
   resize: vertical;
   padding: 10px;
   font-size: 16px;
-  border: 2px solid #007bff;
+  border: 2px solid #544d45;
+  margin-top: 15px;
   border-radius: 8px;
   outline: none;
 }
