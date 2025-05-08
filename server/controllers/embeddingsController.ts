@@ -63,7 +63,7 @@ interface ChunkObject {
 //   embedding: OpenAI.Embedding['embedding'];
 // }
 
-const main = async () => {
+export const main = async () => {
   try {
     const testPdf = fs.readFileSync(pdfFilePath);
     console.log('PDF file loaded');
