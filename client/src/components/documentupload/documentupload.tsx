@@ -40,6 +40,13 @@ function FileUpload() {
     }
   };
 
+  //* Handle wrong file upload
+  const handleRemoveFile = () => {
+    setSelectedFile(null);
+    setError(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
@@ -83,22 +90,40 @@ function FileUpload() {
   return (
     <div className={styles.pageContainer}>
       <div className={styles.inputBox} onDrop={handleDrop} onDragOver={handleDragOver}>
-        <p>Drag and drop a file here, or click to select</p>
+        {!selectedFile && <p>Drag and drop a file here, or click to select</p>}
+
         <input
           className={styles.inputFile}
           type="file"
           accept="application/pdf"
           onChange={handleFileChange}
           aria-label="Upload a file"
+          ref={fileInputRef}
         />
-        {selectedFile && <p>Selected file: {selectedFile.name}</p>}
-        {uploading ? (
-          <button disabled>Uploading...</button>
-        ) : (
-          <button onClick={handleUpload} disabled={!selectedFile}>
-            Upload
-          </button>
+
+        {selectedFile && (
+          <div className={styles.fileInfo}>
+            <p>Selected file: {selectedFile.name}</p>
+          </div>
         )}
+
+        <div className={styles.buttonGroup}>
+          {selectedFile && (
+            <button onClick={handleRemoveFile} className={styles.removeButton}>
+              Remove
+            </button>
+          )}
+          <button
+            onClick={handleUpload}
+            disabled={uploading || !selectedFile}
+            className={styles.uploadButton}
+            title={!selectedFile ? 'Select a PDF file to enable upload' : ''}
+            aria-label="Upload the selected PDF file"
+          >
+            {uploading ? 'Uploading...' : 'Upload'}
+          </button>
+        </div>
+
         {error && <p style={{ color: 'red' }}>{error}</p>}
       </div>
     </div>
