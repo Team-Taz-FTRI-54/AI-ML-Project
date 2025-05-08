@@ -2,8 +2,8 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 // Define type
 type logType = {
-  promptText: string;
-  promptType: string;
+  prompt: string;
+  type: string;
   embedding: string;
   pineconeQueryResult: string;
   answer: string;
@@ -14,20 +14,23 @@ type LogDocument = logType & Document;
 
 // Define schema
 const logSchema = new Schema<LogDocument>({
-  promptText: { type: String, required: true },
-  promptType: { type: String, required: true },
+  prompt: { type: String, required: true },
+  type: { type: String, required: true },
   embedding: { type: String, required: true },
   pineconeQueryResult: [
     {
-      ID: { type: String, required: true },
-      text: { type: String, required: true },
+      id: { type: String, required: true },
+      values: { type: [Number], required: true },
+
       metadata: {
         source: { type: String, required: true },
         chunkIndex: { type: Number, required: true },
+        chunkID: { type: String, required: true },
         document_id: { type: String, required: true },
         number_of_chunks: { type: Number, required: true },
         token_length: { type: Number, required: true },
         timestamp: { type: String, required: true },
+        text: { type: String, required: true },
       },
     },
   ],

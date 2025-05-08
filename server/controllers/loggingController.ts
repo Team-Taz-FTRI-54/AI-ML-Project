@@ -3,13 +3,12 @@ import { ServerError } from '../../types/types.js';
 import Logs from '../models/logModel.js';
 
 export const logQuery: RequestHandler = async (req, res, next) => {
-  const { promptText, promptType, embedding, pineconeQueryResult, answer } =
-    res.locals;
+  const { prompt, type, embedding, pineconeQueryResult, answer } = res.locals;
 
   try {
     await Logs.insertOne({
-      promptText,
-      promptType,
+      prompt,
+      type,
       embedding,
       pineconeQueryResult,
       answer,
@@ -24,7 +23,7 @@ export const logQuery: RequestHandler = async (req, res, next) => {
 
 export const getProfile: RequestHandler = async (req, res) => {
   try {
-    const profile = await Logs.find({}, 'promptText'); // ! what to filter????
+    const profile = await Logs.find({}, 'prompt'); // ! what to filter????
     res.json(profile);
   } catch (err: any) {
     console.error('❌ Error fetching profle:', err.message);
