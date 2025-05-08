@@ -119,9 +119,7 @@ export const main = async () => {
     // Additional resource #2: https://hasanaboulhasan.medium.com/the-best-text-chunking-method-f5faeb243d80
     console.log('Starting semantic chunking...');
     // Create documents for semantic-chunking
-    const documents = [
-      { document_name: 'parsed-data', document_text: textData },
-    ];
+    const documents = [{ document_name: 'parsed-data', document_text: textData }];
 
     // Generate chunks
     const chunksLib = await chunkit(documents, {
