@@ -1,9 +1,9 @@
 import express from 'express';
 const router = express.Router();
 
-import { main } from '../controllers/embeddingsController.js';
+import { processPdfEmbeddings } from '../controllers/embeddingsController.js';
 
-router.post('/api/upload', main, (_req, res) => {
+router.post('/api/upload', processPdfEmbeddings, (_req, res) => {
   res.status(200).json();
 });
 

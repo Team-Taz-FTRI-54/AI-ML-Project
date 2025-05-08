@@ -5,7 +5,7 @@ import { constrainedMemory } from 'process';
 import { ScoredPineconeRecord } from '@pinecone-database/pinecone';
 
 const pc = new Pinecone({
-  apiKey: `${process.env.P_API_KEY}`,
+  apiKey: `${process.env.PINECONE_API_KEY}`,
 });
 const index = pc.index(''); // ! pending for db name
 
@@ -24,11 +24,7 @@ export const queryPineconeDatabase: RequestHandler = async (
     return next(error);
   }
 
-  // const filter: Record<string, object> = {};
-  // if (startYear && endYear) {
-  //   filter.year = { $gte: Number(startYear), $lte: Number(endYear) };
-  // }
-
+  const { vectorMetadata } = res.locals;
   try {
     const queryResponse = await index.namespace('').query({
       vector: embedding,
@@ -37,7 +33,7 @@ export const queryPineconeDatabase: RequestHandler = async (
       includeMetadata: true,
       // filter,
       filter: {
-        document_id: '', // ! 👈 Place holder!!! Adjust this with the one that passed from frontend
+        document_id: vectorMetadata.metadata.document_id, // ! 👈 Place holder!!! Adjust this with the one that passed from frontend
       },
     });
 

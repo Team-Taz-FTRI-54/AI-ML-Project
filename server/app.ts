@@ -13,11 +13,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.post('/', searchRoute);
+app.use('/', searchRoute);
 
-app.post('/', uploadRoute);
+app.use('/', uploadRoute);
 
-app.post('/', userRoute);
+app.use('/', userRoute);
 
 const errorHandler: ErrorRequestHandler = (
   err: ServerError,
