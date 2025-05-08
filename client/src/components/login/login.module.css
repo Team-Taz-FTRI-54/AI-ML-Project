@@ -1,0 +1,34 @@
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+}
+
+.welcome {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.userName,
+.password {
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  width: 300px;
+  margin-right: 15px;
+}
+
+.btns {
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  width: 100%;
+  max-width: 80px;
+  border-radius: 14px;
+}
+
+.text {
+  margin-top: 1rem;
+  font-size: 1rem;
+}

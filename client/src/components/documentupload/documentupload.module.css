@@ -34,3 +34,9 @@
 .subText {
   color: #ce7a5a;
 }
+
+.buttonGroup {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
