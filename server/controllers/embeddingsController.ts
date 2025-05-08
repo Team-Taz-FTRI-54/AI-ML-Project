@@ -4,6 +4,7 @@ import 'dotenv/config';
 import fs from 'fs';
 import path from 'path';
 import OpenAI from 'openai';
+import { Pinecone } from '@pinecone-database/pinecone';
 import { chunkit } from 'semantic-chunking';
 import { parsePdf } from '../utils/pdfUtils.js';
 // import { ServerError } from '../../types/types';
@@ -20,6 +21,11 @@ const __dirname = path.dirname(__filename);
 const pdfFilePath = path.join(__dirname, '../documents/RAG.pdf');
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+const pinecone = new Pinecone({
+  apiKey: process.env.PINECONE_API_KEY!,
+});
+const index = pinecone.index('ask-your-pdf');
 
 // Check if file exists before trying to read it
 if (!fs.existsSync(pdfFilePath)) {
@@ -45,7 +51,7 @@ interface Chunk {
   token_length: number;
 }
 
-interface ChunkObject {
+interface VectorResult {
   ID: string;
   text: string;
   metadata: {
@@ -56,6 +62,7 @@ interface ChunkObject {
     token_length: number;
     timestamp: string;
   };
+  embeddings: number[];
 }
 
 // interface EmbeddedChunk {
@@ -63,7 +70,7 @@ interface ChunkObject {
 //   embedding: OpenAI.Embedding['embedding'];
 // }
 
-const main = async () => {
+export const main = async () => {
   try {
     const testPdf = fs.readFileSync(pdfFilePath);
     console.log('PDF file loaded');
@@ -80,8 +87,8 @@ const main = async () => {
     // console.log(data.version); // PDF.js version
     // console.log(data.text); // PDF text
 
-    // 2. Break the text down into chunks
-    // <------ Option 1: Fixed size chunking ------>
+    // <------ 2. Break the text down into chunks ------>
+    // Option 1: Fixed size chunking
     const textData: string = data.text;
     // const chunkSize: number = 600;
     // const overlap: number = chunkSize * 0.15; // 15% overlap
@@ -133,7 +140,7 @@ const main = async () => {
     console.log('### Option 2: Semantic-Chunking ###');
     console.log(`Created ${chunksLib.length} semantic chunks`);
 
-    // 3. Create objects for each chunk including ID, text, metadata
+    // <------ 3. Create objects for each chunk including ID, text, metadata ------>
     // Map through this chunksLib
     // create from each chunk an object with ID, the text (chunk text), metadata
     // metada - page, chunk number, date,...
@@ -153,66 +160,156 @@ const main = async () => {
       },
     }));
 
-    console.log(`### chunksObject ###`);
-    console.log(arrayOfChunks);
-
-    // 4. Generate embeddings
-    // map through chunksObject
-    // on each grab the chunksObject.text
-    // call openai api embeddings model on chunksObject.text
-    // create a new object with all previous properties (ID, text, metadata) and add embeddings to it
+    // console.log(`### chunksObject ###`);
+    // console.log(arrayOfChunks);
 
     try {
-      // const embedding = await client.embeddings.create({
-      //   model: 'text-embedding-3-small',
-      //   input: chunksObject.text,
-      //   encoding_format: 'float',
-      // });
-      // const embeddings = embedding.data[0].embedding;
+      // <----------------- SWITCHING THE APPROACH, LATER FOR MULTIPLE FILES PROCESSING ----------------->
+      // // <------ 4. Generate embeddings ------>
+      //   // // https://stackoverflow.com/questions/46854299/react-calling-a-function-inside-a-map-function/46854363
+      //   let batchEmbedding: Array<ChunkObject> = [];
+      //   let chunkSize = 20;
+      //   let startIndex = 0;
+      //   if (arrayOfChunks.length > 20) {
+      //     // slice the chunksObject
+      //     while (startIndex < arrayOfChunks.length) {
+      //       const chunk = arrayOfChunks.slice(startIndex, startIndex + chunkSize);
+      //       batchEmbedding.push(chunk);
+      //       startIndex += chunkSize;
+      //     }
+      //   } else {
+      //     batchEmbedding = arrayOfChunks;
+      //   }
+      //   console.log('### batchEmbedding ###');
+      //   // console.log(batchEmbedding);
+      //   // console.log(JSON.stringify(batchEmbedding));
+      //   const document_id = batchEmbedding[0].metadata.document_id;
 
-      // // https://stackoverflow.com/questions/46854299/react-calling-a-function-inside-a-map-function/46854363
-      // chunksObject.map(async function () {
-      //   const embedding = await client.embeddings.create({
+      // // <------ 4.1 Create JSON file for Batch processing ------>
+      // // Documentation: https://platform.openai.com/docs/guides/batch
+      // // https://stackoverflow.com/questions/74907244/how-can-i-use-batch-embeddings-using-openais-api
+      // const batchForJSONL = batchEmbedding.map((el, i) => ({
+      //   custom_id: el.ID, // unique parameter being the
+      //   method: 'POST',
+      //   url: '/v1/embeddings',
+      //   body: {
       //     model: 'text-embedding-3-small',
-      //     input: chunksObject.text,
+      //     input: el.text, // we want to embed the text content
       //     encoding_format: 'float',
-      //   });
-      //   const embeddings = embedding.data[0].embedding;
-      // });
-      let batchEmbedding: Array<Array<ChunkObject>> = [];
-      let chunkSize = 20;
-      let startIndex = 0;
-      if (arrayOfChunks.length > 20) {
-        // slice the chunksObject
-        while (startIndex < arrayOfChunks.length) {
-          const chunk = arrayOfChunks.slice(startIndex, startIndex + chunkSize);
-          batchEmbedding.push(chunk);
-          startIndex += chunkSize;
-        }
-      } else {
-        batchEmbedding = [arrayOfChunks];
-      }
+      //   },
+      // }));
+      // // Create a JSONL file for OpenAI Batch API processing
+      // const fileName = `batchEmbedding-${document_id}.jsonl`;
+      // const jsonlContent = batchForJSONL
+      //   .map((item) => JSON.stringify(item))
+      //   .join('\n');
+      // fs.writeFileSync(fileName, jsonlContent);
 
-      for (const batch of batchEmbedding) {
-        const embeddingsResults = await Promise.all(
-          batch.map(async (chunk) => {
-            console.log(`### CHUNK ${batchEmbedding.indexOf(batch)} ###`);
-            // console.log(chunk.text);
+      // // <------ 4.2 Batch processing OpenAI ------>
+      // // 4.2.1 Upload batch file OpenAI
+      // const file = await client.files.create({
+      //   file: fs.createReadStream(fileName),
+      //   purpose: 'batch',
+      // });
+      // console.log(file);
+      // // 4.2.2 Create the batch
+      // const batch = await client.batches.create({
+      //   input_file_id: file.id,
+      //   endpoint: '/v1/embeddings',
+      //   completion_window: '24h',
+      // });
+      // console.log(batch);
+      // const batchRetrieve = await client.batches.retrieve(batch.id);
+      // console.log(batchRetrieve);
+
+      // <------ 4.1 Standard Embedding API Call ------>
+      // for (const batch of batchEmbedding) {
+      //   const embeddingsResults = await Promise.all(
+      //     batch.map(async (chunk) => {
+      //       console.log(`### CHUNK ${batchEmbedding.indexOf(batch)} ###`);
+      //       // console.log(chunk.text);
+      //     })
+      //   );
+      //   // create 1 sec buffer to avoid api rate limits (for bigger api calls)
+      //   if (batchEmbedding.indexOf(batch) < batchEmbedding.length - 1) {
+      //     await new Promise((resolve) => setTimeout(resolve, 1000));
+      //   }
+      // }
+      // const vectorResults: Array<ChunkObject> = [];
+      const vectorResults: VectorResult[] = [];
+      const batchSize = 20;
+      for (let i = 0; i < arrayOfChunks.length; i += batchSize) {
+        const currentBatch = arrayOfChunks.slice(i, i + batchSize);
+        const results = await Promise.all(
+          // Map through each chunk (el = chunk)
+          currentBatch.map(async (el: Chunk) => {
+            // Generate embeddings for each chunk
+            const embedding = await client.embeddings.create({
+              model: 'text-embedding-3-small',
+              input: el.text,
+              encoding_format: 'float',
+            });
+
+            // Return everything inside the chunk + generate property embeddings
+            return {
+              ...el,
+              embeddings: embedding.data[0].embedding,
+            };
           })
         );
+        // Push the entire arrayOfChunks to our new array
+        vectorResults.push(...results);
 
-        // create 1 sec buffer to avoid api rate limits (for bigger api calls)
-        if (batchEmbedding.indexOf(batch) < batchEmbedding.length - 1) {
-          await new Promise((resolve) => setTimeout(resolve, 1000));
+        // Avoid API rate limits
+        if (i + batchSize < arrayOfChunks.length) {
+          await new Promise((r) => setTimeout(r, 300));
         }
       }
-    } catch (err) {}
+      console.log(`### VECTOR EMBEDDINGS ###`);
+      console.log(`Created ${vectorResults.length} embeddings`);
+      console.log(vectorResults);
+      // console.log(vectorResults[0][0].embeddings);
+
+      upsertBatchesToPicone(vectorResults);
+    } catch (err) {
+      console.error('Error while trying to embed vectors: ', err);
+    }
 
     // 5. Upsert the data
+
     // 6. Store the data inside the MongoDB
   } catch (err) {
     console.error(`Error processing PDF: ${err}`);
   }
+};
+
+const upsertBatchesToPicone = async (vectors: Array<any>): Promise<void> => {
+  // Create batches of vectors
+  const batchSize = 20;
+  const batches = [];
+  for (let i = 0; i < vectors.length; i += batchSize) {
+    batches.push(vectors.slice(i, i + batchSize));
+  }
+
+  const upsertResults = await Promise.allSettled(
+    batches.map(async (batch, i) => {
+      await new Promise((resolve) => setTimeout(resolve, 600));
+
+      const pineconeVectors = batch.map((vector) => ({
+        id: vector.ID,
+        values: vector.embeddings,
+        metadata: {
+          ...vector.metadata,
+          text: vector.text,
+        },
+      }));
+      console.log(`Upserting batch ${i + 1} of ${batches.length}`);
+      return index.upsert(pineconeVectors);
+    })
+  );
+
+  console.log('### upsertResults ###');
+  console.log(upsertResults);
 };
 
 main();
