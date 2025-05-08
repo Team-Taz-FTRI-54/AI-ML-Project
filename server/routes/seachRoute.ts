@@ -3,9 +3,9 @@ const router = express.Router();
 import {
   queryOpenAIEmbedding,
   queryOpenAIChat,
-} from './controllers/openaiController.js';
-import { parseUserQuery } from './controllers/userQueryController.js';
-import { queryPineconeDatabase } from './controllers/pineconeController.js';
+} from '../controllers/openaiController.js';
+import { parseUserQuery } from '../controllers/userQueryController.js';
+import { queryPineconeDatabase } from '../controllers/pineconeController.js';
 
 router.post(
   '/api',
