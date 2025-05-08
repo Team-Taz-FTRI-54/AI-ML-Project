@@ -5,20 +5,24 @@
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "target": "ES2017",
+    // "module": "esnext",
+    // "moduleResolution": "bundler",
+    // "target": "ES2017",
+    "module": "NodeNext", // Changed from "esnext"
+    "moduleResolution": "NodeNext", // Changed from "bundler"
+    "target": "ES2020", // Updated
     "allowJs": true,
     "jsx": "react",
     "skipLibCheck": true
   },
   "ts-node": {
     "esm": true,
-    "transpileOnly": true,
-    "compilerOptions": {
-      "moduleResolution": "node"
-    }
+    "transpileOnly": true
+    // "compilerOptions": {
+    //   "moduleResolution": "node"
+    // }
   },
-  "include": ["client/**/*", "server/**/*", "types/*.ts"],
+  // "include": ["client/**/*", "server/**/*", "types/*.ts"],
+  "include": ["**/*", "types/*.d.ts"],
   "exclude": ["node_modules", "dist", "**/*.test.ts"]
 }
