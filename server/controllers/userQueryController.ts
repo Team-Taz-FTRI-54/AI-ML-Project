@@ -6,7 +6,7 @@ export const parseUserQuery: RequestHandler = async (
   res,
   next
 ) => {
-  if (!req.body.promptText) {
+  if (!req.body.prompt) {
     const error: ServerError = {
       log: 'User query not provided',
       status: 400,
@@ -15,10 +15,10 @@ export const parseUserQuery: RequestHandler = async (
     return next(error);
   }
 
-  const { promptText } = req.body; //! may need to add more states passed from frontend
-  const { promptType } = req.body;
+  const { prompt } = req.body; //! may need to add more states passed from frontend
+  const { type } = req.body;
 
-  if (typeof promptText !== 'string') {
+  if (typeof prompt !== 'string') {
     const error: ServerError = {
       log: 'User query is not a string',
       status: 400,
@@ -27,8 +27,8 @@ export const parseUserQuery: RequestHandler = async (
     return next(error);
   }
 
-  res.locals.promptText = promptText;
-  res.locals.promptType = promptType;
+  res.locals.prompt = prompt;
+  res.locals.type = type;
 
   return next();
 };
