@@ -1,12 +1,15 @@
 import { Routes, Route } from 'react-router-dom';
 import FileUpload from './components/documentupload/documentupload';
-import QueryInput from './components/queryinput/queryInput';
+import Flash from './components/flashPage/flash';
+import QueryWrapper from './components/QueryPage/querywrapper';
 
 function App() {
   return (
+    //prettier-ignore
     <Routes>
-      <Route path="/" element={<FileUpload />} />
-      <Route path="/queryinput" element={<QueryInput />} />
+      <Route path="/" element={<><Flash /><FileUpload /></>} />
+      <Route path="/query" element={<QueryWrapper />} />
+      <Route path="/flash" element={<Flash />} />
     </Routes>
   );
 }
