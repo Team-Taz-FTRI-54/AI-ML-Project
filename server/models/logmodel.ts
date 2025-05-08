@@ -17,7 +17,20 @@ const logSchema = new Schema<LogDocument>({
   promptText: { type: String, required: true },
   promptType: { type: String, required: true },
   embedding: { type: String, required: true },
-  pineconeQueryResult: { type: String, required: true },
+  pineconeQueryResult: [
+    {
+      ID: { type: String, required: true },
+      text: { type: String, required: true },
+      metadata: {
+        source: { type: String, required: true },
+        chunkIndex: { type: Number, required: true },
+        document_id: { type: String, required: true },
+        number_of_chunks: { type: Number, required: true },
+        token_length: { type: Number, required: true },
+        timestamp: { type: String, required: true },
+      },
+    },
+  ],
   answer: { type: String, required: true },
 });
 

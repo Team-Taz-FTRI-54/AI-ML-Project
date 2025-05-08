@@ -37,7 +37,7 @@ export const queryPineconeDatabase: RequestHandler = async (
       includeMetadata: true,
       // filter,
       filter: {
-        document_id: '123abc', // ! 👈 Place holder!!! Adjust this with the one that passed from frontend
+        document_id: '???????', // ! 👈 Place holder!!! Adjust this with the one that passed from frontend
       },
     });
 
