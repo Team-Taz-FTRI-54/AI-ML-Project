@@ -1,23 +1,34 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useUser } from '../userContext/userContext';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useUser } from '../userContext/useUser';
 import styles from './login.module.css';
 
 export default function Login() {
   const [action, setAction] = useState('Login');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const { setUsername: setGlobalUsername } = useUser();
+  const navigate = useNavigate(); //used to redirect after login.
+  const location = useLocation(); // used to allow us to re-use component based on state
 
-  const { setGlobalUsername } = useUser(); // Fixed
-  const navigate = useNavigate();
+  useEffect(() => {
+    setGlobalUsername(username);
+  }, [username, setGlobalUsername]);
+
+  // Set initial action based on the current route
+  useEffect(() => {
+    if (location.pathname === '/signup') {
+      setAction('Sign Up');
+    } else {
+      setAction('Login');
+    }
+  }, [location.pathname]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    // Fixed
     e.preventDefault();
 
     const url = action === 'Login' ? 'http://localhost:3000/login' : 'http://localhost:3000/signup';
-
     const body = { username, password };
 
     try {
@@ -35,7 +46,6 @@ export default function Login() {
       window.alert('You have successfully logged in');
       console.log(`${action} success!`, data);
 
-      setGlobalUsername(username);
       navigate('/history');
     } catch (err) {
       console.error(`Error in ${action}`, err);
@@ -43,21 +53,8 @@ export default function Login() {
   };
 
   return (
-    <div>
-      <h1>Welcome to the Login Page</h1>
-
-      <h1>
-        <span className={styles.titleWatch}>
-          <img src="./watching.png" alt="watching tag" className={styles.watching} />
-        </span>
-        Welcome, valued Employee.
-        <span className={styles.titleWatch}>
-          <img src="./watching.png" alt="watching tag" className={styles.watching} />
-        </span>
-        <br />
-        {action}
-      </h1>
-
+    <div className={styles.pageContainer}>
+      <h1 className={styles.welcome}>{action} for Access</h1>
       <form onSubmit={handleSubmit}>
         <input
           className={styles.userName}
@@ -76,19 +73,18 @@ export default function Login() {
         <button className={styles.btns} type="submit">
           {action}
         </button>
-
         <div>
           {action === 'Sign Up' ? (
             <p className={styles.text}>
               Already have an account?{' '}
-              <button className={styles.btns} type="button" onClick={() => setAction('Login')}>
+              <button className={styles.btns} type="button" onClick={() => navigate('/login')}>
                 Log In
               </button>
             </p>
           ) : (
             <p className={styles.text}>
               New here?{' '}
-              <button className={styles.btns} type="button" onClick={() => setAction('Sign Up')}>
+              <button className={styles.btns} type="button" onClick={() => navigate('/signup')}>
                 Sign Up
               </button>
             </p>

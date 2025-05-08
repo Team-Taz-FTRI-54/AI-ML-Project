@@ -1,0 +1,28 @@
+.answerBox {
+  border: 1px solid 544d45;
+  border-radius: 14px;
+}
+
+.title {
+  font-size: 1.5rem;
+}
+
+.response {
+  color: 3544d45;
+  font-size: 1rem;
+}
+
+.inputBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 500px;
+  min-height: 150px;
+  resize: vertical;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #e67f0a;
+  border-radius: 8px;
+  outline: none;
+}

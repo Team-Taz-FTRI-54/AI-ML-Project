@@ -59,6 +59,7 @@ interface VectorResult {
 }
 
 async function processPdf(filePath: string) {
+
   try {
     if (!fs.existsSync(filePath)) {
       throw new Error(`PDF file not found at: ${filePath}`);

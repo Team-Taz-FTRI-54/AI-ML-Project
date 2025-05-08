@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "NODE_OPTIONS='--loader ts-node/esm' nodemon server.ts",
+    "start": "nodemon server.ts",
     "embeddings": "NODE_OPTIONS='--loader ts-node/esm' node controllers/embeddingsController.ts"
   },
   "keywords": [],
@@ -19,6 +20,7 @@
     "express": "^5.1.0",
     "mongodb": "^6.16.0",
     "mongoose": "^8.14.1",
+    "multer": "^1.4.5-lts.2",
     "nodemon": "^3.1.10",
     "openai": "^4.97.0",
     "pdf.js-extract": "^0.2.1",

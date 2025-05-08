@@ -1,9 +1,10 @@
 import { RequestHandler } from 'express';
-import { ServerError } from '../../types/types';
+import { ServerError } from '../../types/types.js';
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
-import { SYSTEM_PROMPTS } from '../prompts';
-import { buildUserPrompt } from '../prompts';
+import { SYSTEM_PROMPTS } from '../prompts.js';
+import { buildUserPrompt } from '../prompts.js';
+import { Metadata } from 'openai/resources.mjs';
 
 dotenv.config();
 //console.log('OPENAIAPIKEY', `${process.env.OPENAI_API_KEY}`);
@@ -12,8 +13,8 @@ const openai = new OpenAI({
 });
 
 export const queryOpenAIEmbedding: RequestHandler = async (_req, res, next) => {
-  const { userQuery } = res.locals;
-  if (!userQuery) {
+  const { prompt } = res.locals;
+  if (!prompt) {
     const error: ServerError = {
       log: 'queryOpenAIEmbedding did not receive a user query',
       status: 500,
@@ -24,7 +25,7 @@ export const queryOpenAIEmbedding: RequestHandler = async (_req, res, next) => {
   try {
     const response = await openai.embeddings.create({
       model: 'text-embedding-3-small',
-      input: userQuery,
+      input: prompt,
     });
 
     res.locals.embedding = response.data[0].embedding;
@@ -41,8 +42,8 @@ export const queryOpenAIEmbedding: RequestHandler = async (_req, res, next) => {
 };
 
 export const queryOpenAIChat: RequestHandler = async (_req, res, next) => {
-  const { userQuery, pineconeQueryResult, style } = res.locals; // added style for prompts which is passed from front ent
-  if (!userQuery) {
+  const { prompt, pineconeQueryResult, type } = res.locals; // added style for prompts which is passed from front ent
+  if (!prompt) {
     const error: ServerError = {
       log: 'queryOpenAIChat did not receive a user query',
       status: 500,
@@ -60,13 +61,27 @@ export const queryOpenAIChat: RequestHandler = async (_req, res, next) => {
   }
 
   // manipulate pineconeQueryResult and etract meta data only
+
+  interface PineconeQueryResult {
+    metadata: {
+      source: string;
+      chunkIndex: number;
+      chunkID: string;
+      document_id: string;
+      number_of_chunks: number;
+      token_length: number;
+      timestamp: string;
+      text: string;
+    };
+  }
+
   const data = pineconeQueryResult
-    .map((el) => el.metadata)
-    .filter((metadata) => metadata !== undefined);
+    .map((el: PineconeQueryResult, i: number) => ` Option ${i}:${el.metadata} `)
+    .filter((metadata: Metadata) => metadata !== undefined);
 
   //!define user / system prompts
-const systemPromptContent = SYSTEM_PROMPTS[style];
-const userPromptContent = buildUserPrompt(style, data, userQuery);
+  const systemPromptContent = SYSTEM_PROMPTS[style];
+  const userPromptContent = buildUserPrompt(style, data, userQuery);
 
   const userInput: OpenAI.Chat.Completions.ChatCompletionMessageParam = {
     role: 'user',
