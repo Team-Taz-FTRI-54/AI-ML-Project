@@ -12,17 +12,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.post('/', searchRoute, (_req, res) => {
-  res.status(200).json({
-    answer: res.locals.answer,
-  });
-});
+app.post('/', searchRoute);
 
-app.post('/', uploadRoute, (_req, res) => {
-  res.status(200).json({
-    answer: res.locals.answer,
-  });
-});
+app.post('/', uploadRoute);
 
 const errorHandler: ErrorRequestHandler = (
   err: ServerError,

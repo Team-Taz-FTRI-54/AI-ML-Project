@@ -15,7 +15,7 @@ router.post(
   queryOpenAIChat,
 
   (_req, res) => {
-    res.status(200).json({ amswer: res.locals.answer });
+    res.status(200).json({ answer: res.locals.answer });
   }
 );
 
