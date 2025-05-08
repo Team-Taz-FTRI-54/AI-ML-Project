@@ -2,6 +2,8 @@ import { RequestHandler } from 'express';
 import { ServerError } from '../../types/types';
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
+import { SYSTEM_PROMPTS } from '../prompts';
+import { buildUserPrompt } from '../prompts';
 
 dotenv.config();
 //console.log('OPENAIAPIKEY', `${process.env.OPENAI_API_KEY}`);
@@ -39,7 +41,7 @@ export const queryOpenAIEmbedding: RequestHandler = async (_req, res, next) => {
 };
 
 export const queryOpenAIChat: RequestHandler = async (_req, res, next) => {
-  const { userQuery, pineconeQueryResult } = res.locals;
+  const { userQuery, pineconeQueryResult, style } = res.locals; // added style for prompts which is passed from front ent
   if (!userQuery) {
     const error: ServerError = {
       log: 'queryOpenAIChat did not receive a user query',
@@ -63,14 +65,16 @@ export const queryOpenAIChat: RequestHandler = async (_req, res, next) => {
     .filter((metadata) => metadata !== undefined);
 
   //!define user / system prompts
+const systemPromptContent = SYSTEM_PROMPTS[style];
+const userPromptContent = buildUserPrompt(style, data, userQuery);
 
   const userInput: OpenAI.Chat.Completions.ChatCompletionMessageParam = {
     role: 'user',
-    content: 'placeholder for prompt',
+    content: userPromptContent,
   };
   const systemInput: OpenAI.Chat.Completions.ChatCompletionMessageParam = {
     role: 'system',
-    content: 'place holder for prompt',
+    content: systemPromptContent,
   };
 
   try {

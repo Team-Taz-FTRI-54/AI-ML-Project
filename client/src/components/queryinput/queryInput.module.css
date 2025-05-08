@@ -1,0 +1,57 @@
+.logo {
+  width: 250px;
+  padding: 15px 15px;
+}
+
+.inputBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 2px dashed #aaa;
+  padding: 40px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background-color: #fceeee;
+  cursor: pointer;
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+}
+
+.inputFile {
+  margin-top: 10px;
+}
+
+.headingContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn {
+  border-radius: 14px;
+  padding: 10px 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.textBox {
+  width: 500px;
+  min-height: 150px;
+  resize: vertical;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  outline: none;
+}
