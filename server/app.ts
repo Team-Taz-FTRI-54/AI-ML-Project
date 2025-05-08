@@ -3,7 +3,9 @@ import cors from 'cors';
 import 'dotenv/config';
 import { ServerError } from '../types/types.js';
 import { Request, Response, NextFunction } from 'express';
-import searchRoute from './seachRoute.ts';
+
+import uploadRoute from './routes/uploadRoute.js';
+import searchRoute from './routes/seachRoute.js';
 
 const app = express();
 
@@ -12,8 +14,7 @@ app.use(express.json());
 
 app.post('/', searchRoute, (_req, res) => {
   res.status(200).json({
-    movieRecommendation: res.locals.movieRecommendation,
-    //'Wishmaster - A malevolent genie wreaks havoc after being freed, leading to a battle between his dark desires and those trying to stop him.',
+    answer: res.locals.answer,
   });
 });
 

@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { ServerError } from '../../types/types';
+import { ServerError } from '../../types/types.js';
 import { Pinecone } from '@pinecone-database/pinecone';
 import { constrainedMemory } from 'process';
 import { ScoredPineconeRecord } from '@pinecone-database/pinecone';
@@ -47,9 +47,7 @@ export const queryPineconeDatabase: RequestHandler = async (
       });
     }
 
-    console.log(queryResponse.matches);
-    //   const result = queryResponse.matches.map((el)=>el.metadata).filter((metadata): metadata is MovieMetadata => metadata !== undefined);;
-    //  res.locals.pineconeQueryResult = result
+    console.log('Pine Cone query result matches:', queryResponse.matches);
 
     res.locals.pineconeQueryResult = queryResponse.matches;
 
