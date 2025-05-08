@@ -31,12 +31,14 @@ export const queryPineconeDatabase: RequestHandler = async (
 
   try {
     const queryResponse = await index.namespace('').query({
-      //! need to filter by ref id here
       vector: embedding,
       topK: 3,
       includeValues: false,
       includeMetadata: true,
       // filter,
+      filter: {
+        document_id: '', // ! 👈 Place holder!!! Adjust this with the one that passed from frontend
+      },
     });
 
     if (!queryResponse.matches) {
