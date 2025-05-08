@@ -13,8 +13,8 @@ const openai = new OpenAI({
 });
 
 export const queryOpenAIEmbedding: RequestHandler = async (_req, res, next) => {
-  const { userQuery } = res.locals;
-  if (!userQuery) {
+  const { promptText } = res.locals;
+  if (!promptText) {
     const error: ServerError = {
       log: 'queryOpenAIEmbedding did not receive a user query',
       status: 500,
@@ -25,7 +25,7 @@ export const queryOpenAIEmbedding: RequestHandler = async (_req, res, next) => {
   try {
     const response = await openai.embeddings.create({
       model: 'text-embedding-3-small',
-      input: userQuery,
+      input: promptText,
     });
 
     res.locals.embedding = response.data[0].embedding;
@@ -42,8 +42,8 @@ export const queryOpenAIEmbedding: RequestHandler = async (_req, res, next) => {
 };
 
 export const queryOpenAIChat: RequestHandler = async (_req, res, next) => {
-  const { userQuery, pineconeQueryResult, style } = res.locals; // added style for prompts which is passed from front ent
-  if (!userQuery) {
+  const { promptText, pineconeQueryResult, promptType } = res.locals; // added style for prompts which is passed from front ent
+  if (!promptText) {
     const error: ServerError = {
       log: 'queryOpenAIChat did not receive a user query',
       status: 500,

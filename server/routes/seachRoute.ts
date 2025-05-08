@@ -8,7 +8,7 @@ import { parseUserQuery } from '../controllers/userQueryController.js';
 import { queryPineconeDatabase } from '../controllers/pineconeController.js';
 
 router.post(
-  '/api',
+  '/api/query',
   parseUserQuery,
   queryOpenAIEmbedding,
   queryPineconeDatabase,
