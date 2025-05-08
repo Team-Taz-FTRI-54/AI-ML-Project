@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './documentupload.module.css';
 
@@ -10,9 +10,16 @@ function FileUpload() {
   //* gives us access to useNavigate from react-router
   const navigate = useNavigate();
 
-  // Handle file selection via file input
+  // Handle file selection via file input and will ensure that we do not allow for any file type that isn't pdf
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setError(null);
     if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+      if (file.type !== 'application/pdf') {
+        setError('Only PDF files are allowed');
+        setSelectedFile(null);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+      }
       setSelectedFile(event.target.files[0]);
     }
   };
@@ -20,10 +27,20 @@ function FileUpload() {
   //* Handle drag and drop
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
+    setError(null);
     if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
-      setSelectedFile(event.dataTransfer.files[0]);
+      const file = event.dataTransfer.files[0];
+      if (file.type !== 'application/pdf') {
+        setError('Only PDF files are allowed');
+        setSelectedFile(null);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+      } else {
+        setSelectedFile(event.dataTransfer.files[0]);
+      }
     }
   };
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -50,7 +67,7 @@ function FileUpload() {
         console.log('File uploaded successfully!');
         //* Clears the file after upload
         setSelectedFile(null);
-        navigate('./queryinput');
+        navigate('./query');
       } else {
         setError('Error uploading file.');
         console.error('Error: File not uploaded');
@@ -64,18 +81,26 @@ function FileUpload() {
   };
 
   return (
-    <div className={styles.inputBox} onDrop={handleDrop} onDragOver={handleDragOver}>
-      <p>Drag and drop a file here, or click to select</p>
-      <input className={styles.inputFile} type="file" onChange={handleFileChange} aria-label="Upload a file" />
-      {selectedFile && <p>Selected file: {selectedFile.name}</p>}
-      {uploading ? (
-        <button disabled>Uploading...</button>
-      ) : (
-        <button onClick={handleUpload} disabled={!selectedFile}>
-          Upload
-        </button>
-      )}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+    <div className={styles.pageContainer}>
+      <div className={styles.inputBox} onDrop={handleDrop} onDragOver={handleDragOver}>
+        <p>Drag and drop a file here, or click to select</p>
+        <input
+          className={styles.inputFile}
+          type="file"
+          accept="application/pdf"
+          onChange={handleFileChange}
+          aria-label="Upload a file"
+        />
+        {selectedFile && <p>Selected file: {selectedFile.name}</p>}
+        {uploading ? (
+          <button disabled>Uploading...</button>
+        ) : (
+          <button onClick={handleUpload} disabled={!selectedFile}>
+            Upload
+          </button>
+        )}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+      </div>
     </div>
   );
 }
