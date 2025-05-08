@@ -6,12 +6,10 @@ interface AnswerDisplayProps {
 }
 
 const AnswerDisplay: React.FC<AnswerDisplayProps> = ({ answer }) => {
-  if (!answer) return null;
-
   return (
-    <div className={styles.answerBox}>
+    <div className={styles.inputBox}>
       <h3 className={styles.title}>Generated Response</h3>
-      <p className={styles.response}>{answer}</p>
+      <p className={styles.response}>{answer ? answer : 'Your answer will appear here.'}</p>
     </div>
   );
 };

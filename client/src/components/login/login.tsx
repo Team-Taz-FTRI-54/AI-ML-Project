@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../userContext/userContext';
+import { useUser } from '../userContext/useUser';
 import styles from './login.module.css';
 
 export default function Login() {
@@ -9,11 +9,17 @@ export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const { setGlobalUsername } = useUser(); // Fixed
+  //* Get global context setter
+  const { setUsername: setGlobalUsername } = useUser();
+  //* used to redirect
   const navigate = useNavigate();
 
+  //* Sync local username to global context
+  useEffect(() => {
+    setGlobalUsername(username);
+  }, [username, setGlobalUsername]);
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    // Fixed
     e.preventDefault();
 
     const url = action === 'Login' ? 'http://localhost:3000/login' : 'http://localhost:3000/signup';
@@ -35,7 +41,6 @@ export default function Login() {
       window.alert('You have successfully logged in');
       console.log(`${action} success!`, data);
 
-      setGlobalUsername(username);
       navigate('/history');
     } catch (err) {
       console.error(`Error in ${action}`, err);
@@ -43,20 +48,8 @@ export default function Login() {
   };
 
   return (
-    <div>
-      <h1>Welcome to the Login Page</h1>
-
-      <h1>
-        <span className={styles.titleWatch}>
-          <img src="./watching.png" alt="watching tag" className={styles.watching} />
-        </span>
-        Welcome, valued Employee.
-        <span className={styles.titleWatch}>
-          <img src="./watching.png" alt="watching tag" className={styles.watching} />
-        </span>
-        <br />
-        {action}
-      </h1>
+    <div className={styles.pageContainer}>
+      <h1 className={styles.welcome}>{action} for Access</h1>
 
       <form onSubmit={handleSubmit}>
         <input
@@ -64,7 +57,7 @@ export default function Login() {
           type="text"
           placeholder="Username"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => setUsername(e.target.value)} // now updates local state
         />
         <input
           className={styles.password}

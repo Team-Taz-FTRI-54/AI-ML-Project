@@ -7,10 +7,10 @@ function FileUpload() {
   const [uploading, setUploading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  //* gives us access to useNavigate from react-router
+  //* this will be used for redirects
   const navigate = useNavigate();
 
-  // Handle file selection via file input and will ensure that we do not allow for any file type that isn't pdf
+  //* Handle file selection via file input and will ensure that we only allow pdf files
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setError(null);
     if (event.target.files && event.target.files.length > 0) {
@@ -90,7 +90,7 @@ function FileUpload() {
   return (
     <div className={styles.pageContainer}>
       <div className={styles.inputBox} onDrop={handleDrop} onDragOver={handleDragOver}>
-        {!selectedFile && <p>Drag and drop a file here, or click to select</p>}
+        {!selectedFile && <p>Drag and drop a file here, or click to select to add your pdf file</p>}
 
         <input
           className={styles.inputFile}
