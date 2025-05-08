@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useUser } from '../userContext/useUser';
 import styles from './login.module.css';
 
@@ -8,22 +8,27 @@ export default function Login() {
   const [action, setAction] = useState('Login');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
-  //* Get global context setter
   const { setUsername: setGlobalUsername } = useUser();
-  //* used to redirect
-  const navigate = useNavigate();
+  const navigate = useNavigate(); //used to redirect after login.
+  const location = useLocation(); // used to allow us to re-use component based on state
 
-  //* Sync local username to global context
   useEffect(() => {
     setGlobalUsername(username);
   }, [username, setGlobalUsername]);
+
+  // Set initial action based on the current route
+  useEffect(() => {
+    if (location.pathname === '/signup') {
+      setAction('Sign Up');
+    } else {
+      setAction('Login');
+    }
+  }, [location.pathname]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const url = action === 'Login' ? 'http://localhost:3000/login' : 'http://localhost:3000/signup';
-
     const body = { username, password };
 
     try {
@@ -50,14 +55,13 @@ export default function Login() {
   return (
     <div className={styles.pageContainer}>
       <h1 className={styles.welcome}>{action} for Access</h1>
-
       <form onSubmit={handleSubmit}>
         <input
           className={styles.userName}
           type="text"
           placeholder="Username"
           value={username}
-          onChange={(e) => setUsername(e.target.value)} // now updates local state
+          onChange={(e) => setUsername(e.target.value)}
         />
         <input
           className={styles.password}
@@ -69,19 +73,18 @@ export default function Login() {
         <button className={styles.btns} type="submit">
           {action}
         </button>
-
         <div>
           {action === 'Sign Up' ? (
             <p className={styles.text}>
               Already have an account?{' '}
-              <button className={styles.btns} type="button" onClick={() => setAction('Login')}>
+              <button className={styles.btns} type="button" onClick={() => navigate('/login')}>
                 Log In
               </button>
             </p>
           ) : (
             <p className={styles.text}>
               New here?{' '}
-              <button className={styles.btns} type="button" onClick={() => setAction('Sign Up')}>
+              <button className={styles.btns} type="button" onClick={() => navigate('/signup')}>
                 Sign Up
               </button>
             </p>
