@@ -65,22 +65,23 @@ export const queryOpenAIChat: RequestHandler = async (_req, res, next) => {
     .filter((metadata) => metadata !== undefined);
 
   //!define user / system prompts
-const systemPromptContent = SYSTEM_PROMPTS[style];
-const userPromptContent = buildUserPrompt(style, data, userQuery);
+const systemPromptData = SYSTEM_PROMPTS[style];
+const userPromptData = buildUserPrompt(style, data, userQuery);
 
   const userInput: OpenAI.Chat.Completions.ChatCompletionMessageParam = {
     role: 'user',
-    content: userPromptContent,
+    content: userPromptData,
   };
   const systemInput: OpenAI.Chat.Completions.ChatCompletionMessageParam = {
     role: 'system',
-    content: systemPromptContent,
+    content: systemPromptData.content,
   };
 
   try {
     const result = await openai.chat.completions.create({
       model: 'gpt-4',
       messages: [userInput, systemInput],
+      temperature: systemPromptData.temperature,
     });
 
     res.locals.answer = result.choices[0].message.content as string;
