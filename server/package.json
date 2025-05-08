@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "NODE_OPTIONS='--loader ts-node/esm' nodemon server.ts",
+    "start": "nodemon server.ts"
     "embeddings": "NODE_OPTIONS='--loader ts-node/esm' node controllers/embeddingsController.ts"
   },
   "keywords": [],
