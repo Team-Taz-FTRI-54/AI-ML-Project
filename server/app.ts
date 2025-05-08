@@ -6,6 +6,7 @@ import { Request, Response, NextFunction } from 'express';
 
 import uploadRoute from './routes/uploadRoute.js';
 import searchRoute from './routes/seachRoute.js';
+import userRoute from './routes/userRoute.js';
 
 const app = express();
 
@@ -15,6 +16,8 @@ app.use(express.json());
 app.post('/', searchRoute);
 
 app.post('/', uploadRoute);
+
+app.post('/', userRoute);
 
 const errorHandler: ErrorRequestHandler = (
   err: ServerError,

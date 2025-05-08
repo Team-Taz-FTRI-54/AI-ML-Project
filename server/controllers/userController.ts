@@ -5,9 +5,9 @@ type LoginControllerType = {
   createUser: (req: Request, res: Response, next: NextFunction) => void;
   verifyUser: (req: Request, res: Response, next: NextFunction) => void;
 };
-const loginController: LoginControllerType = {} as LoginControllerType;
+const userController: LoginControllerType = {} as LoginControllerType;
 
-loginController.createUser = async (req, res, next) => {
+userController.createUser = async (req, res, next) => {
   try {
     const { username, password } = req.body;
     if (!username || !password) {
@@ -25,7 +25,7 @@ loginController.createUser = async (req, res, next) => {
   }
 };
 
-loginController.verifyUser = async (req, res, next) => {
+userController.verifyUser = async (req, res, next) => {
   try {
     const { username, password } = req.body;
     if (!username || !password) {
@@ -44,4 +44,4 @@ loginController.verifyUser = async (req, res, next) => {
   }
 };
 
-export default loginController;
+export default userController;
