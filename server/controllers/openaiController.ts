@@ -4,6 +4,7 @@ import OpenAI from 'openai';
 import dotenv from 'dotenv';
 import { SYSTEM_PROMPTS } from '../prompts.js';
 import { buildUserPrompt } from '../prompts.js';
+import { Metadata } from 'openai/resources.mjs';
 
 dotenv.config();
 //console.log('OPENAIAPIKEY', `${process.env.OPENAI_API_KEY}`);
@@ -60,9 +61,21 @@ export const queryOpenAIChat: RequestHandler = async (_req, res, next) => {
   }
 
   // manipulate pineconeQueryResult and etract meta data only
+
+  interface PineconeQueryResult {
+    metadata: {
+      source: string;
+      chunkIndex: number;
+      document_id: string;
+      number_of_chunks: number;
+      token_length: number;
+      timestamp: string;
+    };
+  }
+
   const data = pineconeQueryResult
-    .map((el) => el.metadata)
-    .filter((metadata) => metadata !== undefined);
+    .map((el: PineconeQueryResult, i: number) => ` Option ${i}:${el.metadata} `)
+    .filter((metadata: Metadata) => metadata !== undefined);
 
   //!define user / system prompts
   const systemPromptContent = SYSTEM_PROMPTS[style];
