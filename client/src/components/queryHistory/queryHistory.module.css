@@ -1,3 +1,25 @@
-.h1 {
-  color: blue;
+.title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #516564;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  margin: 1rem 0;
+}
+
+.logTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.logTable th,
+.logTable td {
+  border: 1px solid #aca5a5;
+  padding: 0.75rem;
+  text-align: left;
 }

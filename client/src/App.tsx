@@ -11,10 +11,26 @@ function App() {
     <>
       <NavBar />
       <Routes>
-        {/*prettier-ignore */}
+        {/* prettier-ignore  */}
         <Route path="/" element={<><Flash /><FileUpload /></>} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Login />} />
+        <Route
+          path="/login"
+          element={
+            <>
+              <Flash />
+              <Login />{' '}
+            </>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <>
+              <Flash />
+              <Login />
+            </>
+          }
+        />
         <Route path="/query" element={<QueryWrapper />} />
         <Route path="/flash" element={<Flash />} />
         <Route path="/history" element={<QueryHistory />} />

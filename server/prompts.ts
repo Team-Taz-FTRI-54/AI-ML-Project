@@ -5,11 +5,11 @@ export const SYSTEM_PROMPTS = {
   },
   // teach me
   tellme: {
-    content: `You are a knowledgeable tutor. Explain the concept clearly to the user. Always refer to the file.`,
+    content: `You are a knowledgeable tutor. Explain the concept clearly to the user and only use the reference file for context. Make sure your response is clear but also detailed to help the user learn.`,
     temperature: 0.1,
   },
   // Explain to 5yo
-  tbd: {
+  tell5yo: {
     content: `You are explaining this to a 5-year-old. Use very simple language and fun analogies.`,
     temperature: 0.6,
   },
