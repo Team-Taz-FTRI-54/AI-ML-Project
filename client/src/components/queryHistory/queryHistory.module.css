@@ -1,25 +1,44 @@
-.title {
+.logTable {
+  width: 75%;
+  border-collapse: collapse;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.logTable th {
+  background-color: #f0f4f3;
+  color: #516564;
+  font-weight: 600;
+  padding: 1rem;
+  border: 1px solid #d0d0d0;
+}
+
+.logTable td {
+  background-color: #ffffff;
+  border: 1px solid #e2e2e2;
+  padding: 1rem;
+  vertical-align: top;
+}
+
+.subtitle {
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 2rem;
   margin-bottom: 1rem;
   color: #516564;
+  font-weight: 500;
 }
 
-.subtitle {
-  font-size: 1.25rem;
-  margin: 1rem 0;
-}
-
-.logTable {
+.tableWrapper {
   width: 100%;
-  border-collapse: collapse;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.2rem;
 }
 
-.logTable th,
-.logTable td {
-  border: 1px solid #aca5a5;
-  padding: 0.75rem;
-  text-align: left;
+.promptColumn {
+  width: 200px;
+  word-break: break-word;
 }
