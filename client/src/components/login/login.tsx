@@ -73,7 +73,7 @@ export default function Login() {
         <button className={styles.btns} type="submit">
           {action}
         </button>
-        <div>
+        {/* <div>
           {action === 'Sign Up' ? (
             <p className={styles.text}>
               Already have an account?{' '}
@@ -89,7 +89,7 @@ export default function Login() {
               </button>
             </p>
           )}
-        </div>
+        </div> */}
       </form>
     </div>
   );

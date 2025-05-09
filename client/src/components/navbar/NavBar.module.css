@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  background-color: #444;
+  background-color: #5e767a;
   height: 60px;
   display: flex;
   justify-content: center;
@@ -26,7 +26,7 @@
 
 .nav a {
   text-decoration: none;
-  color: #ce7a5a;
+  color: #3e332e;
   padding: 0.5em 1em;
   transition: all 0.3s ease;
   font-size: 1rem;
@@ -34,7 +34,7 @@
 
 .nav a:hover,
 .nav a.active {
-  color: #788889;
+  color: #c86c4c;
   font-weight: bold;
-  border-bottom: 2px dotted #ddc3a1;
+  border-bottom: 2px dotted #5e767a;
 }

@@ -17,9 +17,7 @@ const QueryInput: React.FC<QueryInputProps> = ({ setAnswer }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState('');
-  const [promptType, setPromptType] = useState<
-    'default' | 'whatif' | 'tellme' | 'tbd'
-  >('default');
+  const [promptType, setPromptType] = useState<'default' | 'whatif' | 'tellme' | 'tell5yo'>('default');
 
   useEffect(() => {
     const storedSessionId = localStorage.getItem('documentSessionId');
@@ -28,10 +26,7 @@ const QueryInput: React.FC<QueryInputProps> = ({ setAnswer }) => {
     }
   }, []);
 
-  const handleQuickPrompt = (
-    prompt: string,
-    type: 'whatif' | 'tellme' | 'tbd'
-  ) => {
+  const handleQuickPrompt = (prompt: string, type: 'whatif' | 'tellme' | 'tell5yo') => {
     setPromptText(prompt);
     setPromptType(type);
   };
@@ -79,8 +74,8 @@ const QueryInput: React.FC<QueryInputProps> = ({ setAnswer }) => {
         <div className={styles.buttonContainer}>
           <div className={styles.btns}>
             <button onClick={() => handleQuickPrompt('What if...', 'whatif')}>What if...</button>
-            <button onClick={() => handleQuickPrompt('Tell me more', 'tellme')}>Tell me more</button>
-            <button onClick={() => handleQuickPrompt('To Be Determined', 'tbd')}>To be Determined</button>
+            <button onClick={() => handleQuickPrompt('Tell me more about', 'tellme')}>Tell me more</button>
+            <button onClick={() => handleQuickPrompt('Explain to a 5 year old ...', 'tell5yo')}>Explain to a 5 Y.O.</button>
           </div>
         </div>
 
@@ -96,11 +91,7 @@ const QueryInput: React.FC<QueryInputProps> = ({ setAnswer }) => {
        />
        </div>
 
-        <button
-          className={styles.btn}
-          onClick={handleSubmit}
-          disabled={loading}
-        >
+        <button className={styles.btn} onClick={handleSubmit} disabled={loading}>
           {loading ? 'Submitting...' : 'Submit'}
         </button>
 
