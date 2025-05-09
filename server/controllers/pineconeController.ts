@@ -23,9 +23,9 @@ export const queryPineconeDatabase: RequestHandler = async (
     };
     return next(error);
   }
-
-  const { vectorMetadata } = res.locals;
-  console.log(vectorMetadata);
+  const vectorResults = res.locals.vectorResults;
+  console.log(vectorResults);
+  console.log(vectorResults[0]);
   try {
     const queryResponse = await index.namespace('').query({
       vector: embedding,
@@ -34,7 +34,7 @@ export const queryPineconeDatabase: RequestHandler = async (
       includeMetadata: true,
       // filter,
       filter: {
-        document_id: vectorMetadata.metadata.document_id, // ! 👈 Place holder!!! Adjust this with the one that passed from frontend
+        document_id: vectorResults[0].metadata.document_id, // ! 👈 Place holder!!! Adjust this with the one that passed from frontend
       },
     });
 
