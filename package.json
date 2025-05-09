@@ -13,15 +13,18 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "mongoose": "^8.14.1",
     "nodemon": "^3.1.10",
+    "openai": "^4.98.0",
     "pdf-parse": "^1.1.1",
     "semantic-chunking": "^2.4.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.1",
+    "@types/node": "^22.15.17",
     "concurrently": "^9.1.2"
   }
 }
