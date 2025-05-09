@@ -34,7 +34,8 @@ export const queryPineconeDatabase: RequestHandler = async (
       includeMetadata: true,
       // filter,
       filter: {
-        document_id: vectorResults[0].metadata.document_id, // ! 👈 Place holder!!! Adjust this with the one that passed from frontend
+        document_id: '1746756299426',
+        //document_id: vectorResults[0].metadata.document_id, // ! 👈 Place holder!!! Adjust this with the one that passed from frontend
       },
     });
 
