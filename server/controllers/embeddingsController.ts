@@ -59,7 +59,6 @@ interface VectorResult {
 }
 
 async function processPdf(filePath: string) {
-
   try {
     if (!fs.existsSync(filePath)) {
       throw new Error(`PDF file not found at: ${filePath}`);
@@ -323,7 +322,7 @@ export const processPdfEmbeddings: RequestHandler = async (req, res, next) => {
 
     // <------ 6. Store vectorResults in request for downstream middleware ------>
     res.locals.vectorMetadata = vectorResults;
-
+    console.log(vectorResults);
     // (Optional) 7. Store the data inside the MongoDB
 
     next();

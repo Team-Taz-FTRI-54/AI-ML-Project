@@ -11,17 +11,28 @@ userController.createUser = async (req, res, next) => {
   try {
     const { username, password } = req.body;
     if (!username || !password) {
-      return next({ err: 'Missing username or password!' });
+      return next({
+        log: 'userController.createUser: Missing username or password!',
+        status: 400,
+        message: { err: 'Missing username or password!' },
+      });
     }
     if (password.length < 6)
-      return next({ err: 'password must be at least 6 characters long' });
+      return next({
+        log: 'userController.createUser: password must be at least 6 characters long!',
+        status: 400,
+        message: { err: 'password must be at least 6 characters long' },
+      });
     const data = await User.create({ username, password });
     res.locals.userNew = data;
     console.log('New user saved', data);
     return next();
-  } catch (err: any) {
-    console.error('Error with createUser', err.message);
-    res.status(500).json({ error: 'Create user failed' });
+  } catch (_err) {
+    return next({
+      log: 'createUser: Error: createUser',
+      status: 500,
+      message: { err: 'An error occurred createUser' },
+    });
   }
 };
 
@@ -29,7 +40,11 @@ userController.verifyUser = async (req, res, next) => {
   try {
     const { username, password } = req.body;
     if (!username || !password) {
-      return next({ err: 'Missing username or password!' });
+      return next({
+        log: 'missing username or password',
+        status: 400,
+        message: { err: 'missing username or password' },
+      });
     }
 
     const data = await User.findOne({ username, password });
@@ -39,8 +54,12 @@ userController.verifyUser = async (req, res, next) => {
     res.locals.user = data;
     console.log('User verified success', data);
     return next();
-  } catch (err: any) {
-    console.error('Error in verifyUser', err.message);
+  } catch (_err) {
+    return next({
+      log: 'verifyUser: Error: verifyUser',
+      status: 500,
+      message: { err: 'An error occurred verifyUser' },
+    });
   }
 };
 
