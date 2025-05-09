@@ -97,8 +97,8 @@ export const queryOpenAIChat: RequestHandler = async (_req, res, next) => {
   }
   const systemPromptData = SYSTEM_PROMPTS[type];
   const userPromptData = buildUserPrompt(type, data, prompt);
-  console.log('🔥🔥🔥 userPromptData 🔥🔥🔥');
-  console.log(userPromptData);
+  // console.log('🔥🔥🔥 userPromptData 🔥🔥🔥');
+  //console.log(userPromptData);
 
   const userInput: OpenAI.Chat.Completions.ChatCompletionMessageParam = {
     role: 'user',
