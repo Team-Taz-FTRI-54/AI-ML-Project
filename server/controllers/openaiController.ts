@@ -84,6 +84,8 @@ export const queryOpenAIChat: RequestHandler = async (_req, res, next) => {
     (el: PineconeQueryResult, i: number) => `
       Option ${i}:${el.metadata.text} `
   );
+  console.log('### data ###');
+  console.log(data);
 
   //!define user / system prompts
   if (!(type in SYSTEM_PROMPTS)) {
