@@ -1,4 +1,5 @@
 import { Request, RequestHandler } from 'express';
+import { FileRequest } from '../types/types.js';
 import { fileURLToPath, pathToFileURL } from 'url';
 import 'dotenv/config';
 import fs from 'fs';
@@ -64,7 +65,7 @@ async function processPdf(filePath: string) {
       throw new Error(`PDF file not found at: ${filePath}`);
     }
 
-    const testPdf = fs.readFileSync(pdfFilePath);
+    const testPdf = fs.readFileSync(filePath);
     console.log('PDF file loaded');
 
     const data = await parsePdf(testPdf);
@@ -185,26 +186,30 @@ const upsertBatchesToPicone = async (vectors: Array<any>): Promise<void> => {
         },
       }));
       console.log(`Upserting batch ${i + 1} of ${batches.length}`);
-      console.log(pineconeVectors);
+      // console.log(pineconeVectors);
       return index.upsert(pineconeVectors);
     })
   );
 
-  console.log('### upsertResults ###');
-  console.log(upsertResults);
+  // console.log('### upsertResults ###');
+  // console.log(upsertResults);
 };
 
-export const processPdfEmbeddings: RequestHandler = async (req, res, next) => {
+export const processPdfEmbeddings: RequestHandler = async (
+  req: FileRequest,
+  res,
+  next
+) => {
   try {
-    // // Get PDF file from request
-    // const pdfFile = req.file;
-    // if (!pdfFile) {
-    //   return res.status(400).json({ error: 'No PDF file provided' });
-    // }
-
+    // Get PDF file from request
+    const pdfFile = req.file;
+    if (!pdfFile) {
+      res.status(400).json({ error: 'No PDF file provided' });
+      return;
+    }
     // <------ 1. Extract text from the PDF ------>
     // https://www.npmjs.com/package/pdf-parse
-    const pdfData = await processPdf(pdfFilePath);
+    const pdfData = await processPdf(pdfFile.path);
     const pdfTitle = pdfData.title;
     const textData: string = pdfData.text;
 
@@ -248,8 +253,8 @@ export const processPdfEmbeddings: RequestHandler = async (req, res, next) => {
       textData,
       pdfTitle
     );
-    console.log(`### chunksObject ###`);
-    console.log(arrayOfChunks);
+    // console.log(`### chunksObject ###`);
+    // console.log(arrayOfChunks);
 
     // <----------------- SWITCHING THE APPROACH, LATER FOR MULTIPLE FILES PROCESSING ----------------->
     // // <------ 4. Generate embeddings ------>
@@ -313,20 +318,22 @@ export const processPdfEmbeddings: RequestHandler = async (req, res, next) => {
     const vectorResults: VectorResult[] = await generateVectorResults(
       arrayOfChunks
     );
-    console.log(`### VECTOR EMBEDDINGS ###`);
-    console.log(`Created ${vectorResults.length} embeddings`);
+    // console.log(`### VECTOR EMBEDDINGS ###`);
+    // console.log(`Created ${vectorResults.length} embeddings`);
     // console.log(vectorResults);
 
     // <------ 5. Upsert the Data to the Pinecone DB ------>
     upsertBatchesToPicone(vectorResults);
 
     // <------ 6. Store vectorResults in request for downstream middleware ------>
-    res.locals.vectorMetadata = vectorResults;
+    res.locals.vectorResults = vectorResults;
+    console.log('🚨🚨🚨 vectorResults 🚨🚨🚨');
     console.log(vectorResults);
     // (Optional) 7. Store the data inside the MongoDB
 
     next();
   } catch (err) {
     console.error('Error while trying to embed vectors: ', err);
+    next(err);
   }
 };

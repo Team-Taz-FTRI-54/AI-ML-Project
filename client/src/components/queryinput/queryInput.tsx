@@ -16,9 +16,14 @@ const QueryInput: React.FC<QueryInputProps> = ({ setAnswer }) => {
   const [promptText, setPromptText] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [promptType, setPromptType] = useState<'default' | 'whatif' | 'tellme' | 'tbd'>('default');
+  const [promptType, setPromptType] = useState<
+    'default' | 'whatif' | 'tellme' | 'tbd'
+  >('default');
 
-  const handleQuickPrompt = (prompt: string, type: 'whatif' | 'tellme' | 'tbd') => {
+  const handleQuickPrompt = (
+    prompt: string,
+    type: 'whatif' | 'tellme' | 'tbd'
+  ) => {
     setPromptText(prompt);
     setPromptType(type);
   };
@@ -79,7 +84,11 @@ const QueryInput: React.FC<QueryInputProps> = ({ setAnswer }) => {
        />
        </div>
 
-        <button className={styles.btn} onClick={handleSubmit} disabled={loading}>
+        <button
+          className={styles.btn}
+          onClick={handleSubmit}
+          disabled={loading}
+        >
           {loading ? 'Submitting...' : 'Submit'}
         </button>
 
