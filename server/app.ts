@@ -1,7 +1,7 @@
 import express, { ErrorRequestHandler } from 'express';
 import cors from 'cors';
 import 'dotenv/config';
-import { ServerError } from '../types/types.js';
+import { ServerError } from './types/types.js';
 import { Request, Response, NextFunction } from 'express';
 
 import uploadRoute from './routes/uploadRoute.js';
@@ -13,13 +13,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-
 // Must be app.use to use middleware
 app.use('/', searchRoute);
 
 app.use('/api', uploadRoute);
-
-app.use('/', searchRoute);
 
 app.use('/', userRoute);
 

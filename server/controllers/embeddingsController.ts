@@ -186,13 +186,13 @@ const upsertBatchesToPicone = async (vectors: Array<any>): Promise<void> => {
         },
       }));
       console.log(`Upserting batch ${i + 1} of ${batches.length}`);
-      console.log(pineconeVectors);
+      // console.log(pineconeVectors);
       return index.upsert(pineconeVectors);
     })
   );
 
-  console.log('### upsertResults ###');
-  console.log(upsertResults);
+  // console.log('### upsertResults ###');
+  // console.log(upsertResults);
 };
 
 export const processPdfEmbeddings: RequestHandler = async (
@@ -253,8 +253,8 @@ export const processPdfEmbeddings: RequestHandler = async (
       textData,
       pdfTitle
     );
-    console.log(`### chunksObject ###`);
-    console.log(arrayOfChunks);
+    // console.log(`### chunksObject ###`);
+    // console.log(arrayOfChunks);
 
     // <----------------- SWITCHING THE APPROACH, LATER FOR MULTIPLE FILES PROCESSING ----------------->
     // // <------ 4. Generate embeddings ------>
@@ -318,8 +318,8 @@ export const processPdfEmbeddings: RequestHandler = async (
     const vectorResults: VectorResult[] = await generateVectorResults(
       arrayOfChunks
     );
-    console.log(`### VECTOR EMBEDDINGS ###`);
-    console.log(`Created ${vectorResults.length} embeddings`);
+    // console.log(`### VECTOR EMBEDDINGS ###`);
+    // console.log(`Created ${vectorResults.length} embeddings`);
     // console.log(vectorResults);
 
     // <------ 5. Upsert the Data to the Pinecone DB ------>
@@ -327,6 +327,7 @@ export const processPdfEmbeddings: RequestHandler = async (
 
     // <------ 6. Store vectorResults in request for downstream middleware ------>
     res.locals.vectorResults = vectorResults;
+    console.log('🚨🚨🚨 vectorResults 🚨🚨🚨');
     console.log(vectorResults);
     // (Optional) 7. Store the data inside the MongoDB
 

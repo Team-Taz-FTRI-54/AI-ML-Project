@@ -4,7 +4,7 @@ import OpenAI from 'openai';
 import dotenv from 'dotenv';
 import { SYSTEM_PROMPTS } from '../prompts.js';
 import { buildUserPrompt } from '../prompts.js';
-import { Metadata } from 'openai/resources.mjs';
+import { Metadata } from 'openai/resources.js';
 
 dotenv.config();
 //console.log('OPENAIAPIKEY', `${process.env.OPENAI_API_KEY}`);
@@ -42,13 +42,12 @@ export const queryOpenAIEmbedding: RequestHandler = async (_req, res, next) => {
 };
 
 export const queryOpenAIChat: RequestHandler = async (_req, res, next) => {
-  const { userQuery, pineconeQueryResult, style } = res.locals as {
-    userQuery: string;
+  const { prompt, pineconeQueryResult, type } = res.locals as {
+    prompt: string;
     pineconeQueryResult: any;
-    style: keyof typeof SYSTEM_PROMPTS;
+    type: keyof typeof SYSTEM_PROMPTS;
   }; // added style for prompts which is passed from front end
-  if (!userQuery) {
-  const { prompt, pineconeQueryResult, type } = res.locals; // added style for prompts which is passed from front ent
+
   if (!prompt) {
     const error: ServerError = {
       log: 'queryOpenAIChat did not receive a user query',
@@ -86,15 +85,15 @@ export const queryOpenAIChat: RequestHandler = async (_req, res, next) => {
     .filter((metadata: Metadata) => metadata !== undefined);
 
   //!define user / system prompts
-if (!(style in SYSTEM_PROMPTS)) {
-  return next({
-    log: `queryOpenAIChat: Invalid style '${style}' provided`,
-    status: 400,
-    message: { err: 'Invalid style provided for querying OpenAI' },
-  });
-}
-const systemPromptData = SYSTEM_PROMPTS[style];
-const userPromptData = buildUserPrompt(style, data, userQuery);
+  if (!(type in SYSTEM_PROMPTS)) {
+    return next({
+      log: `queryOpenAIChat: Invalid style '${type}' provided`,
+      status: 400,
+      message: { err: 'Invalid style provided for querying OpenAI' },
+    });
+  }
+  const systemPromptData = SYSTEM_PROMPTS[type];
+  const userPromptData = buildUserPrompt(type, data, prompt);
 
   const userInput: OpenAI.Chat.Completions.ChatCompletionMessageParam = {
     role: 'user',
