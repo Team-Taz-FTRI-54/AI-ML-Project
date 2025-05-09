@@ -17,6 +17,8 @@ export default function QueryHistory() {
       try {
         const res = await fetch('http://localhost:3000/api/query');
         const data = await res.json();
+        console.log('Hey we are here');
+        console.log(data);
         setLogs(data);
       } catch (err) {
         console.error('❌ Error fetching logs:', err);
@@ -45,7 +47,7 @@ export default function QueryHistory() {
             <tr key={idx}>
               <td>{log.prompt}</td>
               <td>{log.type}</td>
-              <td>{log.embedding?.slice(0, 1)}...</td>
+              <td> {log.embedding.slice(0, 6).join(', ')} ...</td>
               <td>{log.answer}</td>
             </tr>
           ))}
