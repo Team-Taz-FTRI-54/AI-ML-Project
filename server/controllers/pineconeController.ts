@@ -7,7 +7,7 @@ import { ScoredPineconeRecord } from '@pinecone-database/pinecone';
 const pc = new Pinecone({
   apiKey: `${process.env.PINECONE_API_KEY}`,
 });
-const index = pc.index(''); // ! pending for db name
+const index = pc.index('ask-your-pdf'); // ! pending for db name
 
 export const queryPineconeDatabase: RequestHandler = async (
   _req,
@@ -25,6 +25,7 @@ export const queryPineconeDatabase: RequestHandler = async (
   }
 
   const { vectorMetadata } = res.locals;
+  console.log(vectorMetadata);
   try {
     const queryResponse = await index.namespace('').query({
       vector: embedding,
@@ -51,6 +52,7 @@ export const queryPineconeDatabase: RequestHandler = async (
 
     return next();
   } catch (_err) {
+    console.error('Pinecone query error:', _err);
     return next({
       log: 'queryPineconeDatabase: Error: Pinecone error',
       status: 500,
