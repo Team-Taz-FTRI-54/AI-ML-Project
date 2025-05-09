@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './queryInput.module.css';
 
 //* interface used to tell Typescript we will receive object (props) setAnswer required
@@ -16,9 +16,17 @@ const QueryInput: React.FC<QueryInputProps> = ({ setAnswer }) => {
   const [promptText, setPromptText] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState('');
   const [promptType, setPromptType] = useState<
     'default' | 'whatif' | 'tellme' | 'tbd'
   >('default');
+
+  useEffect(() => {
+    const storedSessionId = localStorage.getItem('documentSessionId');
+    if (storedSessionId) {
+      setSessionId(storedSessionId);
+    }
+  }, []);
 
   const handleQuickPrompt = (
     prompt: string,
@@ -44,7 +52,11 @@ const QueryInput: React.FC<QueryInputProps> = ({ setAnswer }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ prompt: promptText, type: promptType }),
+        body: JSON.stringify({
+          prompt: promptText,
+          type: promptType,
+          sessionId: sessionId,
+        }),
       });
       if (!response.ok) {
         throw new Error('Failed to submit prompt');

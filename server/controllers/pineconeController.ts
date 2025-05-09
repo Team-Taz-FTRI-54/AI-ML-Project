@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express';
 import { ServerError } from '../../types/types.js';
 import { Pinecone } from '@pinecone-database/pinecone';
+import { documentStore } from '../store/documentStore.js';
 import { constrainedMemory } from 'process';
 import { ScoredPineconeRecord } from '@pinecone-database/pinecone';
 
@@ -9,12 +10,10 @@ const pc = new Pinecone({
 });
 const index = pc.index('ask-your-pdf'); // ! pending for db name
 
-export const queryPineconeDatabase: RequestHandler = async (
-  _req,
-  res,
-  next
-) => {
+export const queryPineconeDatabase: RequestHandler = async (req, res, next) => {
   const { embedding } = res.locals;
+  const { sessionId } = req.body;
+
   if (!embedding) {
     const error: ServerError = {
       log: 'Database query middleware did not receive embedding',
@@ -23,9 +22,12 @@ export const queryPineconeDatabase: RequestHandler = async (
     };
     return next(error);
   }
-  const vectorResults = res.locals.vectorResults;
-  console.log(vectorResults);
-  console.log(vectorResults[0]);
+
+  const documentData = documentStore.get(sessionId);
+  // console.log('SessionID received:', sessionId);
+  // console.log('DocumentId:', documentData.documentId);
+  // console.log('Document data retrieved:', documentData);
+
   try {
     const queryResponse = await index.namespace('').query({
       vector: embedding,
@@ -34,7 +36,7 @@ export const queryPineconeDatabase: RequestHandler = async (
       includeMetadata: true,
       // filter,
       filter: {
-        document_id: vectorResults[0].metadata.document_id, // ! 👈 Place holder!!! Adjust this with the one that passed from frontend
+        document_id: { $eq: documentData.documentId },
       },
     });
 
@@ -46,7 +48,7 @@ export const queryPineconeDatabase: RequestHandler = async (
       });
     }
 
-    console.log('Pine Cone query result matches:', queryResponse.matches);
+    // console.log('Pine Cone query result matches:', queryResponse.matches);
 
     res.locals.pineconeQueryResult = queryResponse.matches;
 

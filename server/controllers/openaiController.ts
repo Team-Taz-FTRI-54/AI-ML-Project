@@ -80,9 +80,10 @@ export const queryOpenAIChat: RequestHandler = async (_req, res, next) => {
     };
   }
 
-  const data = pineconeQueryResult
-    .map((el: PineconeQueryResult, i: number) => ` Option ${i}:${el.metadata} `)
-    .filter((metadata: Metadata) => metadata !== undefined);
+  const data = pineconeQueryResult.map(
+    (el: PineconeQueryResult, i: number) => `
+      Option ${i}:${el.metadata.text} `
+  );
 
   //!define user / system prompts
   if (!(type in SYSTEM_PROMPTS)) {
@@ -94,6 +95,8 @@ export const queryOpenAIChat: RequestHandler = async (_req, res, next) => {
   }
   const systemPromptData = SYSTEM_PROMPTS[type];
   const userPromptData = buildUserPrompt(type, data, prompt);
+  console.log('🔥🔥🔥 userPromptData 🔥🔥🔥');
+  console.log(userPromptData);
 
   const userInput: OpenAI.Chat.Completions.ChatCompletionMessageParam = {
     role: 'user',

@@ -71,8 +71,11 @@ function FileUpload() {
       });
 
       if (response.ok) {
-        console.log('File uploaded successfully!');
         //* Clears the file after upload
+        const data = await response.json();
+        console.log('File uploaded successfully!');
+        localStorage.setItem('documentSessionId', data.sessionId);
+
         setSelectedFile(null);
         navigate('./query');
       } else {
