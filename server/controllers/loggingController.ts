@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import { ServerError } from '../../types/types.js';
-import Logs from '../models/logModel.js';
+import Logs from '../models/logmodel.js';
 
 export const logQuery: RequestHandler = async (req, res, next) => {
   const { prompt, type, embedding, pineconeQueryResult, answer } = res.locals;
