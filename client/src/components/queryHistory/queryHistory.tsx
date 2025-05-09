@@ -17,8 +17,6 @@ export default function QueryHistory() {
       try {
         const res = await fetch('http://localhost:3000/api/query');
         const data = await res.json();
-        console.log('Hey we are here');
-        console.log(data);
         setLogs(data);
       } catch (err) {
         console.error('❌ Error fetching logs:', err);
@@ -29,14 +27,13 @@ export default function QueryHistory() {
   }, []);
 
   return (
-    <div>
+    <div className={styles.tableWrapper}>
       <h1 className={styles.title}>Query History</h1>
       <h2 className={styles.subtitle}>Table of AI Searches</h2>
-
       <table className={styles.logTable}>
         <thead>
           <tr>
-            <th>Prompt</th>
+            <th className={styles.promptColumn}>Prompt</th>
             <th>Type</th>
             <th>Embedding</th>
             <th>Answer</th>
@@ -45,7 +42,7 @@ export default function QueryHistory() {
         <tbody>
           {logs.map((log, idx) => (
             <tr key={idx}>
-              <td>{log.prompt}</td>
+              <td className={styles.promptColumn}>{log.prompt}</td>
               <td>{log.type}</td>
               <td> {log.embedding.slice(0, 6).join(', ')} ...</td>
               <td>{log.answer}</td>
