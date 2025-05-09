@@ -15,12 +15,10 @@ export const SYSTEM_PROMPTS = {
   },
 } as const;
 
-export const buildUserPrompt = (
-  style: string,
-  datachunk: string,
-  question: string
-): string => {
+export const buildUserPrompt = (style: string, datachunk: string, question: string): string => {
   return `
+
+
   ### CONTEXT ###
   ${datachunk}
   
