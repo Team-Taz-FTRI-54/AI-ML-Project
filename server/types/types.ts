@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 export type ServerError = {
   log: string;
   status: number;
@@ -14,3 +16,7 @@ export type Metadata = {
   token_length: number;
   timestamp: string;
 };
+
+export interface FileRequest extends Request {
+  file?: Express.Multer.File;
+}

@@ -13,11 +13,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.post('/', searchRoute);
+// Must be app.use to use middleware
+app.use('/', searchRoute);
 
-app.post('/', uploadRoute);
+app.use('/api', uploadRoute);
 
-app.post('/', userRoute);
+app.use('/', userRoute);
 
 const errorHandler: ErrorRequestHandler = (
   err: ServerError,

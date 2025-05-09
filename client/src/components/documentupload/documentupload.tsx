@@ -89,15 +89,23 @@ function FileUpload() {
 
   return (
     <div className={styles.pageContainer}>
-      <div className={styles.inputBox} onDrop={handleDrop} onDragOver={handleDragOver}>
-        {!selectedFile && <p>Drag and drop a file here, or click to select to add your pdf file</p>}
+      <div
+        className={styles.inputBox}
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+      >
+        {!selectedFile && (
+          <p>
+            Drag and drop a file here, or click to select to add your pdf file
+          </p>
+        )}
 
         <input
           className={styles.inputFile}
-          type="file"
-          accept="application/pdf"
+          type='file'
+          accept='application/pdf'
           onChange={handleFileChange}
-          aria-label="Upload a file"
+          aria-label='Upload a file'
           ref={fileInputRef}
         />
 
@@ -118,7 +126,7 @@ function FileUpload() {
             disabled={uploading || !selectedFile}
             className={styles.uploadButton}
             title={!selectedFile ? 'Select a PDF file to enable upload' : ''}
-            aria-label="Upload the selected PDF file"
+            aria-label='Upload the selected PDF file'
           >
             {uploading ? 'Uploading...' : 'Upload'}
           </button>

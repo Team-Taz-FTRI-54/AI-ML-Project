@@ -1,10 +1,16 @@
 import express from 'express';
+import { fileUpload } from '../controllers/uploadController.js';
+import { processPdfEmbeddings } from '../controllers/embeddingsController.js';
+
 const router = express.Router();
 
-import { main } from '../controllers/embeddingsController.js';
-
-router.post('/api/upload', main, (_req, res) => {
-  res.status(200).json();
-});
+router.post(
+  '/upload',
+  fileUpload.single('file'),
+  processPdfEmbeddings,
+  (_req, res) => {
+    res.status(200).json(res.locals.vectorResults);
+  }
+);
 
 export default router;
