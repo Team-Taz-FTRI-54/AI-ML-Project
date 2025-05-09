@@ -42,6 +42,12 @@ export const queryOpenAIEmbedding: RequestHandler = async (_req, res, next) => {
 };
 
 export const queryOpenAIChat: RequestHandler = async (_req, res, next) => {
+  const { userQuery, pineconeQueryResult, style } = res.locals as {
+    userQuery: string;
+    pineconeQueryResult: any;
+    style: keyof typeof SYSTEM_PROMPTS;
+  }; // added style for prompts which is passed from front end
+  if (!userQuery) {
   const { prompt, pineconeQueryResult, type } = res.locals; // added style for prompts which is passed from front ent
   if (!prompt) {
     const error: ServerError = {
@@ -80,22 +86,30 @@ export const queryOpenAIChat: RequestHandler = async (_req, res, next) => {
     .filter((metadata: Metadata) => metadata !== undefined);
 
   //!define user / system prompts
-  const systemPromptContent = SYSTEM_PROMPTS[style];
-  const userPromptContent = buildUserPrompt(style, data, userQuery);
+if (!(style in SYSTEM_PROMPTS)) {
+  return next({
+    log: `queryOpenAIChat: Invalid style '${style}' provided`,
+    status: 400,
+    message: { err: 'Invalid style provided for querying OpenAI' },
+  });
+}
+const systemPromptData = SYSTEM_PROMPTS[style];
+const userPromptData = buildUserPrompt(style, data, userQuery);
 
   const userInput: OpenAI.Chat.Completions.ChatCompletionMessageParam = {
     role: 'user',
-    content: userPromptContent,
+    content: userPromptData,
   };
   const systemInput: OpenAI.Chat.Completions.ChatCompletionMessageParam = {
     role: 'system',
-    content: systemPromptContent,
+    content: systemPromptData.content,
   };
 
   try {
     const result = await openai.chat.completions.create({
       model: 'gpt-4',
       messages: [userInput, systemInput],
+      temperature: systemPromptData.temperature,
     });
 
     res.locals.answer = result.choices[0].message.content as string;

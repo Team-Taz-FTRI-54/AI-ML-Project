@@ -327,7 +327,7 @@ export const processPdfEmbeddings: RequestHandler = async (
 
     // <------ 6. Store vectorResults in request for downstream middleware ------>
     res.locals.vectorResults = vectorResults;
-
+    console.log(vectorResults);
     // (Optional) 7. Store the data inside the MongoDB
 
     next();

@@ -13,10 +13,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+
 // Must be app.use to use middleware
 app.use('/', searchRoute);
 
 app.use('/api', uploadRoute);
+
+app.use('/', searchRoute);
 
 app.use('/', userRoute);
 
