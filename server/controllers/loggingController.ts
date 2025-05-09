@@ -23,7 +23,7 @@ export const logQuery: RequestHandler = async (req, res, next) => {
 
 export const getProfile: RequestHandler = async (req, res) => {
   try {
-    const profile = await Logs.find({}, 'prompt'); // ! what to filter????
+    const profile = await Logs.find({}, { prompt: 1, answer: 1, _id: 0 }); // ! what to filter????
     res.json(profile);
   } catch (err: any) {
     console.error('❌ Error fetching profle:', err.message);

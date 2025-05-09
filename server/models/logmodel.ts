@@ -1,14 +1,31 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 // Define type
+
+type PineconeMetadata = {
+  source: string;
+  chunkIndex: number;
+  chunkID: string;
+  document_id: string;
+  number_of_chunks: number;
+  token_length: number;
+  timestamp: string;
+  text: string;
+};
+
+type PineconeMatch = {
+  id: string;
+  values: number[];
+  metadata: PineconeMetadata;
+};
+
 type logType = {
   prompt: string;
   type: string;
-  embedding: string;
-  pineconeQueryResult: string;
+  embedding: number[];
+  pineconeQueryResult: PineconeMatch[];
   answer: string;
 };
-
 // Extend Document to get Mongoose Document methods and metadata
 type LogDocument = logType & Document;
 
@@ -16,7 +33,7 @@ type LogDocument = logType & Document;
 const logSchema = new Schema<LogDocument>({
   prompt: { type: String, required: true },
   type: { type: String, required: true },
-  embedding: { type: String, required: true },
+  embedding: { type: [Number], required: true },
   pineconeQueryResult: [
     {
       id: { type: String, required: true },

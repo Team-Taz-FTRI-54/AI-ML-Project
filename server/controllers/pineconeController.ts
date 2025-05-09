@@ -1,14 +1,17 @@
 import { RequestHandler } from 'express';
 import { ServerError } from '../../types/types.js';
 import { Pinecone } from '@pinecone-database/pinecone';
-import { documentStore } from '../store/documentStore.js';
+import { documentStore, generateSessionId } from '../store/documentStore.js';
 import { constrainedMemory } from 'process';
 import { ScoredPineconeRecord } from '@pinecone-database/pinecone';
 
+import dotenv from 'dotenv';
+dotenv.config();
 const pc = new Pinecone({
   apiKey: `${process.env.PINECONE_API_KEY}`,
 });
 const index = pc.index('ask-your-pdf'); // ! pending for db name
+console.log(process.env.PINECONE_API_KEY);
 
 export const queryPineconeDatabase: RequestHandler = async (req, res, next) => {
   const { embedding } = res.locals;
@@ -22,27 +25,23 @@ export const queryPineconeDatabase: RequestHandler = async (req, res, next) => {
     };
     return next(error);
   }
+  const documentStore = new Map<string, any>();
 
   const documentData = documentStore.get(sessionId);
   // console.log('SessionID received:', sessionId);
   // console.log('DocumentId:', documentData.documentId);
-  // console.log('Document data retrieved:', documentData);
+  //console.log('Document data retrieved:', sessionId);
 
   try {
-    const queryResponse = await index.namespace('').query({
+    const queryResponse = await index.query({
       vector: embedding,
       topK: 3,
       includeValues: false,
       includeMetadata: true,
       // filter,
-      filter: {
-<<<<<<< HEAD
-        document_id: '1746756299426',
-        //document_id: vectorResults[0].metadata.document_id, // ! 👈 Place holder!!! Adjust this with the one that passed from frontend
-=======
-        document_id: { $eq: documentData.documentId },
->>>>>>> 447de98b8761a326429d035c087f35f6d9c5020f
-      },
+      // filter: {
+      //   document_id: { $eq: documentData.documentId },
+      // },
     });
 
     if (!queryResponse.matches) {
